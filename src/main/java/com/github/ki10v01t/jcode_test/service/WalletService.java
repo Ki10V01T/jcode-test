@@ -18,6 +18,7 @@ public class WalletService {
         this.walletRepository = walletRepository;
     }
 
+    @Transactional
     public void savePayment(Wallet wallet) {
         walletRepository.save(wallet);
     }

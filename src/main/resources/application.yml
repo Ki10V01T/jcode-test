@@ -1,0 +1,21 @@
+server:
+    port:                   ${APP_PORT:10100}
+spring:
+    application:
+        name:               jcode-test
+# Конфигурация data source
+    datasource:
+        driver-class-name:  org.postgresql.Driver
+        url:                ${DB_URL:jdbc:postgresql://localhost:5432/jcode-test-db1}
+        username:           ${DB_USERNAME:dimon}
+        password:           ${DB_PASSWD:11111111}
+# Конфигурация Hibernate
+    jpa:
+        properties:
+            dialect:        org.hibernate.dialect.PostgreSQLDialect
+            hibernate:
+                "[show_sql]":   true
+
+    liquibase:
+        enabled: false
+        change-log:         classpath:db.changelog-master.yaml

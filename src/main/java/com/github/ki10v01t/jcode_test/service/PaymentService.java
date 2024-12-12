@@ -18,7 +18,7 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-
+    @Transactional
     public void createNewPayment(Payment payment) {
         paymentRepository.save(payment);
     }

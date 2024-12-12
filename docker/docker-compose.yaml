@@ -1,0 +1,39 @@
+version: '3.9'
+ 
+services:
+  postgresql:
+    container_name: postgresql
+    image: bitnami/postgresql
+    environment:
+      
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d/
+    networks:
+      - app-network    
+
+  app:
+    container_name: simple-spring-boot-app
+    build:
+      context: ./simple-spring-boot-app
+      dockerfile: Dockerfile
+    environment:
+      - "DB_URL=jdbc:postgresql://localhost:5432/jcode-test-db1"
+      - "DB_USERNAME=dimon"
+      - "DB_PASSWD=11111111"
+      - "SERVER_PORT=10100"
+    expose:
+      - "10100"
+    depends_on:
+      - postgresql
+    restart: always
+    networks:
+      - app-network    
+
+networks:
+  app-network:
+    driver: bridge

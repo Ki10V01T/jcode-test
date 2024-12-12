@@ -1,0 +1,70 @@
+databaseChangeLog:
+- changeSet:
+    id: 1734030104847-1
+    author: dimon
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: wallet_pkey
+            defaultValueComputed: uuid_generate_v4()
+            name: wallet_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: full_name
+            type: VARCHAR(50)
+        - column:
+            constraints:
+              nullable: false
+            name: balance
+            type: BIGINT
+        tableName: wallet
+- changeSet:
+    id: 1734030104847-2
+    author: dimon
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: payment_pkey
+            defaultValueComputed: uuid_generate_v4()
+            name: payment_id
+            type: UUID
+        - column:
+            name: wallet_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: operation_type
+            type: VARCHAR(10)
+        - column:
+            constraints:
+              nullable: false
+            name: amount
+            type: BIGINT
+        tableName: payment
+- changeSet:
+    id: 1734030104847-3
+    author: dimidrol (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: wallet_id
+        baseTableName: payment
+        constraintName: payment_wallet_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: CASCADE
+        onUpdate: NO ACTION
+        referencedColumnNames: wallet_id
+        referencedTableName: wallet
+        validate: true
+

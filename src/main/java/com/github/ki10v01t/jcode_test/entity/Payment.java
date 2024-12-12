@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,12 +29,13 @@ public class Payment {
     private Wallet wallet;
 
     @Column(name = "operation_type")
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Поле operationType не должно быть пустым")
     private OperationType operationType;
 
     @Column(name = "amount")
     @NotNull(message = "Поле amount не должно быть пустым")
-    @Min(value = 0, message = "Значение поля amount, не может быть меньше нуля")
+    @Min(value = 0L, message = "Значение поля amount, не может быть меньше нуля")
     @Max(value = 9223372036854775806L, message = "Значение поля amount не может быть слишком большим")
     private Long amount;
 
