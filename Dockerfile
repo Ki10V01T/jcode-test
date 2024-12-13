@@ -1,4 +1,4 @@
-FROM maven:3.9.9-jdk-17 AS builder
+FROM maven:3.9.9-eclipse-temurin-17-focal AS builder
 COPY ./ ./
 RUN mvn clean package -DskipTests
 FROM openjdk:17.0.2-slim-buster

@@ -17,9 +17,9 @@ services:
       - app-network    
 
   app:
-    container_name: simple-spring-boot-app
+    #container_name: jcode-test
     build:
-      context: ./simple-spring-boot-app
+      context:  ~/Documents/Workspace/java-projects/jcode-test
       dockerfile: Dockerfile
     environment:
       - "DB_URL=jdbc:postgresql://localhost:5432/jcode-test-db1"
