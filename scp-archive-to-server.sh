@@ -9,7 +9,7 @@ removing_remote_folder() {
 }
 
 removing_remote_archive() {
-    if ssh homesrv_user '[ -e /home/developer/Documents/Workspace/java-projects/jcode-test/jcode-test-sources.tgz ]';
+    if ssh homesrv_user '[ -e /home/developer/Documents/Workspace/java-projects/jcode-test-sources.tgz ]';
     then
         echo "Удаление архива с сервера..."
         ssh homesrv_user rm /home/developer/Documents/Workspace/java-projects/jcode-test-sources.tgz
@@ -17,10 +17,10 @@ removing_remote_archive() {
 }
 
 removing_local_archive() {
-    if [ -e "/home/dimidrol/Documents/Workspace/git/jcode-test/jcode-test-sources.tgz" ];
+    if [ -e "/home/dimidrol/Documents/Workspace/git/jcode-test-sources.tgz" ];
     then
         echo "Удаление локального архива..."
-        rm /home/dimidrol/Documents/Workspace/git/jcode-test/jcode-test-sources.tgz
+        rm /home/dimidrol/Documents/Workspace/git/jcode-test-sources.tgz
     fi
 }
 
@@ -61,7 +61,7 @@ create_new_compose_app_from_sources() {
     if ssh homesrv_user '[ -e /home/developer/Documents/Workspace/java-projects/jcode-test/docker-compose.yaml ]';
     then
         echo "Создание нового контейнера из compose файла..."
-        ssh homesrv_user docker-compose up -f /home/developer/Documents/Workspace/java-projects/jcode-test/docker-compose.yaml
+        ssh homesrv_user docker-compose -f /home/developer/Documents/Workspace/java-projects/jcode-test/docker-compose.yaml up
     fi
 }
 
