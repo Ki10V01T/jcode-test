@@ -6,6 +6,7 @@ spring:
 # Конфигурация data source
     datasource:
         driver-class-name:  org.postgresql.Driver
+        #url:                jdbc:postgresql://192.168.1.48:5432/jcode-test-db1
         url:                ${DB_URL:jdbc:postgresql://postgresql:5432/jcode-test-db1}
         username:           ${DB_USERNAME:dimon}
         password:           ${DB_PASSWD:11111111}

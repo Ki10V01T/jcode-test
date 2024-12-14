@@ -43,18 +43,19 @@ public class WalletApiRestController {
     }
 
     @GetMapping("/wallets/{wallet-id}")
-    public ResponseEntity<Payment> getOnePaymentByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
+    public ResponseEntity<List<Payment>> getOnePaymentByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
         if(!Wallet.uuidRegex.matcher(walletIdTemplate).matches()) {
             throw new IllegalArgumentException("The argument you passed is not valid");
         }
         UUID walletId = UUID.fromString(walletIdTemplate);
 
-        Optional<Payment> payment = paymentService.getOnePaymentByWalletId(walletId);
-        if(payment.isEmpty()) {
+        Optional<Wallet> wallet = walletService.getWalletById(walletId);
+        //Optional<Payment> payment = paymentService.getOnePaymentByWalletId(walletId);
+        if(wallet.isEmpty()) {
             throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
         }
         
-        return ResponseEntity.ok().body(payment.get());
+        return ResponseEntity.ok().body(wallet.get().getPayments());
     }
 
     @PostMapping("/wallet")

@@ -3,6 +3,8 @@ package com.github.ki10v01t.jcode_test.entity;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +45,7 @@ public class Wallet {
     private Long balance;
 
     @OneToMany(mappedBy = "wallet", cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Payment> payments;
 
     public Wallet() {
