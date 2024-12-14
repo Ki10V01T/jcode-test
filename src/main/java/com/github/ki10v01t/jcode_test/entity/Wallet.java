@@ -51,6 +51,12 @@ public class Wallet {
     public Wallet() {
     }
 
+    public Wallet(String fullName, Long balance, List<Payment> payments) {
+        this.fullName = fullName;
+        this.balance = balance;
+        this.payments = payments;
+    }
+
     public Wallet(String walletIdTemplate) throws IllegalArgumentException {
         this.walletId = UUID.fromString(walletIdTemplate);
     }

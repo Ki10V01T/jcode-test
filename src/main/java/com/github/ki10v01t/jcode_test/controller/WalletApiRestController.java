@@ -1,6 +1,7 @@
 package com.github.ki10v01t.jcode_test.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.ki10v01t.jcode_test.entity.Payment;
 import com.github.ki10v01t.jcode_test.entity.Wallet;
+import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
 import com.github.ki10v01t.jcode_test.entity.Dto.PaymentErrorResponseDto;
 import com.github.ki10v01t.jcode_test.exception.PaymentNotFoundException;
 import com.github.ki10v01t.jcode_test.service.PaymentService;
@@ -42,21 +44,38 @@ public class WalletApiRestController {
         this.paymentValidator = paymentValidator;
     }
 
+    @GetMapping("/wallets/payments/{wallet-id}")
+    public ResponseEntity<List<PaymentDto>> getPaymentsByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
+        
+        UUID walletId = walletService.transformWalletUUID(walletIdTemplate, Wallet.uuidRegex);
+
+        // Optional<Wallet> wallet = walletService.getWalletById(walletId);
+        // if(wallet.isEmpty()) {
+        //     throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
+        // }
+
+        List<PaymentDto> payments = paymentService.getPaymentsByWalletId(walletId);
+        //return ResponseEntity.ok().body(wallet.get().getPayments());
+        return ResponseEntity.ok().body(payments);
+    }
+
     @GetMapping("/wallets/{wallet-id}")
-    public ResponseEntity<List<Payment>> getOnePaymentByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
-        if(!Wallet.uuidRegex.matcher(walletIdTemplate).matches()) {
-            throw new IllegalArgumentException("The argument you passed is not valid");
-        }
-        UUID walletId = UUID.fromString(walletIdTemplate);
+    public ResponseEntity<Wallet> getWalletBalanceByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
+        
+        UUID walletId = walletService.transformWalletUUID(walletIdTemplate, Wallet.uuidRegex);
 
         Optional<Wallet> wallet = walletService.getWalletById(walletId);
-        //Optional<Payment> payment = paymentService.getOnePaymentByWalletId(walletId);
         if(wallet.isEmpty()) {
             throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
         }
-        
-        return ResponseEntity.ok().body(wallet.get().getPayments());
+
+        return ResponseEntity.ok().body(wallet.get());
+        //List<PaymentDto> payments = paymentService.getPaymentsByWalletId(walletId);
+        //return ResponseEntity.ok().body(wallet.get().getPayments());
+        //return ResponseEntity.ok().body(payments);
     }
+
+    
 
     @PostMapping("/wallet")
     public ResponseEntity<HttpStatus> saveNewPayment(@RequestBody @Valid Payment payment, BindingResult bindingResult) {

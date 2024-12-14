@@ -1,5 +1,7 @@
 package com.github.ki10v01t.jcode_test.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ki10v01t.jcode_test.entity.Payment;
+import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
+import com.github.ki10v01t.jcode_test.exception.PaymentNotFoundException;
 import com.github.ki10v01t.jcode_test.repository.PaymentRepository;
 
 @Service
@@ -23,7 +27,17 @@ public class PaymentService {
         paymentRepository.save(payment);
     }
 
-    public Optional<Payment> getOnePaymentByWalletId(UUID id) {
-        return paymentRepository.findByWalletId(id);
+    public List<PaymentDto> getPaymentsByWalletId(UUID walletId) {
+        List<Payment> payments = paymentRepository.findAllByWalletId(walletId);
+        if(payments.size() == 0) {
+            throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
+        }
+
+        List<PaymentDto> paymentsResult = new ArrayList<>(payments.size());
+        for(Payment p : payments) {
+            paymentsResult.add(new PaymentDto(p.getWallet().getWalletId(), p.getOperationType(), p.getAmount()));
+        }
+
+        return paymentsResult;
     }
 }
