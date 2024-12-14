@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,7 +42,7 @@ public class Wallet {
     @Max(value = 9223372036854775806L, message = "Значение поля amount не может быть слишком большим")
     private Long balance;
 
-    @OneToMany(mappedBy = "wallet", cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "wallet", cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     private List<Payment> payments;
 
     public Wallet() {

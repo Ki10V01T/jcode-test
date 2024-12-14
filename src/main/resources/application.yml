@@ -6,16 +6,18 @@ spring:
 # Конфигурация data source
     datasource:
         driver-class-name:  org.postgresql.Driver
-        url:                ${DB_URL:jdbc:postgresql://localhost:5432/jcode-test-db1}
+        url:                ${DB_URL:jdbc:postgresql://postgresql:5432/jcode-test-db1}
         username:           ${DB_USERNAME:dimon}
         password:           ${DB_PASSWD:11111111}
 # Конфигурация Hibernate
     jpa:
+        hibernate:
+            ddl-auto:       none 
         properties:
             dialect:        org.hibernate.dialect.PostgreSQLDialect
             hibernate:
                 "[show_sql]":   true
 
     liquibase:
-        enabled: false
+        enabled:            true
         change-log:         classpath:db.changelog-master.yaml

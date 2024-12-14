@@ -1,6 +1,7 @@
 databaseChangeLog:
 - changeSet:
     id: 1734030104847-1
+    comment: "Create wallet table"
     author: dimon
     changes:
     - createTable:
@@ -26,6 +27,7 @@ databaseChangeLog:
         tableName: wallet
 - changeSet:
     id: 1734030104847-2
+    commment: "Create payment table"
     author: dimon
     changes:
     - createTable:
@@ -54,7 +56,8 @@ databaseChangeLog:
         tableName: payment
 - changeSet:
     id: 1734030104847-3
-    author: dimidrol (generated)
+    comment: "Create constraints"
+    author: dimon
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: wallet_id
@@ -68,3 +71,32 @@ databaseChangeLog:
         referencedTableName: wallet
         validate: true
 
+- changeSet:
+      id: 1734030104847-4
+      author: dimon
+      comment: "Create wallets"
+      changes:
+        - insert:
+            tableName: wallet
+            columns:
+              - column:
+                  name: wallet_id
+                  value: "cf9e7d45-151d-45c4-a26b-3c57642d561e"
+              - column:
+                  name: full_name
+                  value: "Иванов Иван Иванович"
+              - column:
+                  name: balance
+                  value: "1000000"
+        - insert:
+            tableName: wallet
+            columns:
+              - column:
+                  name: wallet_id
+                  value: "7f83e274-3588-4527-90ae-012da6e05f6b"
+              - column:
+                  name: full_name
+                  value: "Петров Пётр Петрович"
+              - column:
+                  name: balance
+                  value: "500000"

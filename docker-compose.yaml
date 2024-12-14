@@ -11,8 +11,9 @@ services:
     ports:
       - "5432:5432"
     restart: always
-    #volumes:
-      #- ./init:/docker-entrypoint-initdb.d/
+    volumes:
+        - ./sql-init-scripts/uuid-enable.sql:/docker-entrypoint-initdb.d/uuid-enable.sql
+      # - ./init:/docker-entrypoint-initdb.d/
     networks:
       - app-network    
 
@@ -24,10 +25,12 @@ services:
       context:  ~/Documents/Workspace/java-projects/jcode-test
       dockerfile: Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://localhost:5432/jcode-test-db1
+      - DB_URL=jdbc:postgresql://postgresql:5432/jcode-test-db1
       - DB_USERNAME=${POSTGRES_USER:-dimon}
       - DB_PASSWD=${POSTGRES_PASSWORD:-11111111}
       - SERVER_PORT=10100
+    ports:
+      - "10100:10100"
     expose:
       - "10100"
     depends_on:
