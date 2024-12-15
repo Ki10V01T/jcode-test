@@ -1,5 +1,6 @@
 package com.github.ki10v01t.jcode_test.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,14 +45,14 @@ public class WalletApiRestController {
         
         UUID walletId = walletService.transformWalletUUID(walletIdTemplate, Wallet.uuidRegex);
 
-        // Optional<Wallet> wallet = walletService.getWalletById(walletId);
-        // if(wallet.isEmpty()) {
-        //     throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
-        // }
+        List<Payment> payments = paymentService.getPaymentsByWalletId(walletId);
 
-        List<PaymentDto> payments = paymentService.getPaymentsByWalletId(walletId);
-        //return ResponseEntity.ok().body(wallet.get().getPayments());
-        return ResponseEntity.ok().body(payments);
+        List<PaymentDto> paymentsResult = new ArrayList<>(payments.size());
+        for(Payment p : payments) {
+            paymentsResult.add(new PaymentDto.PaymentDtoBuilder().setWalletId(walletId).setOperationType(p.getOperationType()).setAmount(p.getAmount()).build());
+        }
+
+        return ResponseEntity.ok().body(paymentsResult);
     }
 
     @GetMapping("/wallets/{wallet-id}")
@@ -59,13 +60,10 @@ public class WalletApiRestController {
         
         UUID walletId = walletService.transformWalletUUID(walletIdTemplate, Wallet.uuidRegex);
 
-        WalletDto wallet = walletService.getWalletById(walletId);
+        Wallet wallet = walletService.getWalletById(walletId);
         
 
-        return ResponseEntity.ok().body(wallet);
-        //List<PaymentDto> payments = paymentService.getPaymentsByWalletId(walletId);
-        //return ResponseEntity.ok().body(wallet.get().getPayments());
-        //return ResponseEntity.ok().body(payments);
+        return ResponseEntity.ok().body(new WalletDto.WalletDtoBuilder().setBalance(wallet.getBalance()).build());
     }
 
     
@@ -88,6 +86,7 @@ public class WalletApiRestController {
             throw new NotFoundException(errorMessage.toString());
         }
 
+        walletService.updateBalance(paymentDto);
         paymentService.createNewPayment(paymentDto);
         return ResponseEntity.ok().build();
     }

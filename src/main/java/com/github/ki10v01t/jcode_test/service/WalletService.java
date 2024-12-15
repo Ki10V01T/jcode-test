@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ki10v01t.jcode_test.entity.Wallet;
-import com.github.ki10v01t.jcode_test.entity.Dto.WalletDto;
+import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
 import com.github.ki10v01t.jcode_test.exception.NotFoundException;
 import com.github.ki10v01t.jcode_test.repository.WalletRepository;
 
@@ -34,17 +34,45 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
+    @Transactional
+    public void updateBalance(PaymentDto paymentDto) {
+        Wallet wallet = walletRepository.findById(paymentDto.getWalletId()).get();
+        switch (paymentDto.getOperationType()) {
+            case DEPOSIT -> {
+                if(paymentDto.getAmount() > Long.MAX_VALUE) {
+                    throw new IllegalArgumentException("Передано слишком большое значение");
+                }
+                if(wallet.getBalance() + paymentDto.getAmount() > Long.MAX_VALUE) {
+                    throw new IllegalArgumentException("Кошелёк переполнен");
+                }
+                Long result = wallet.getBalance() + paymentDto.getAmount();
+                wallet.setBalance(result);
+            }
+            case WITHDRAW -> {
+                if(wallet.getBalance() - paymentDto.getAmount() < 0) {
+                    throw new IllegalArgumentException("Недостаточно средств для списания");
+                }
+                Long result = wallet.getBalance() - paymentDto.getAmount();
+                wallet.setBalance(result);
+            }
+        
+            default -> {
+                throw new IllegalArgumentException("Неизвестная ошибка");
+            }
+        }
+    }
+
     public Boolean checkExistedWalletById(UUID walletId) {
         return walletRepository.existsById(walletId);
     }
 
-    public WalletDto getWalletById(UUID walletId) throws NotFoundException{
+    public Wallet getWalletById(UUID walletId) throws NotFoundException{
         Optional<Wallet> wallet = walletRepository.findById(walletId);
         if(wallet.isEmpty()) {
             throw new NotFoundException("The wallet for the wallet_id you specified was not found");
         }
 
-        return new WalletDto.WalletDtoBuilder().setBalance(wallet.get().getBalance()).build();
+        return wallet.get();
     }
 
 }

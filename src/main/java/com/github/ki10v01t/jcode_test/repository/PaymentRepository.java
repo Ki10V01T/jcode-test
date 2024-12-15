@@ -1,7 +1,6 @@
 package com.github.ki10v01t.jcode_test.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;

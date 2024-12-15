@@ -3,6 +3,7 @@ package com.github.ki10v01t.jcode_test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,8 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.github.ki10v01t.jcode_test.controller.WalletApiRestController;
 import com.github.ki10v01t.jcode_test.entity.OperationType;
+import com.github.ki10v01t.jcode_test.entity.Payment;
 import com.github.ki10v01t.jcode_test.entity.Wallet;
 import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
+import com.github.ki10v01t.jcode_test.entity.Dto.WalletDto;
 import com.github.ki10v01t.jcode_test.exception.NotFoundException;
 import com.github.ki10v01t.jcode_test.service.PaymentService;
 import com.github.ki10v01t.jcode_test.service.PaymentValidator;
@@ -46,9 +49,12 @@ class JcodeTestApplicationTests {
 		UUID walletId = UUID.fromString(template);
 		PaymentDto payment1 = new PaymentDto.PaymentDtoBuilder().setWalletId(walletId).setOperationType(OperationType.DEPOSIT).setAmount(1000L).build();
 		PaymentDto payment2 = new PaymentDto.PaymentDtoBuilder().setWalletId(walletId).setOperationType(OperationType.DEPOSIT).setAmount(500L).build();
-
-
+		
 		return List.of(payment1, payment2);
+	}
+
+	private WalletDto getWalletDtoForBalanceCheck() {
+		return new WalletDto.WalletDtoBuilder().setBalance(500000L).build();
 	}
 
 	/**
@@ -102,17 +108,21 @@ class JcodeTestApplicationTests {
 			.andExpect(jsonPath("$.message").value("The wallet for the wallet_id you specified was not found"));
 	}
 
+	
 	/**
-	 * Не проходит. Запрос выполняется, в ответ возращается список из json'ов. Но не даёт доступ к первому элементу.
+	 * Не проходит, т.к. wallet == null. На проде всё работает с тем же UUID.
 	 * @throws Exception
 	 */
 	@Test
 	public void testValidWalletBalanceExample() throws Exception {
-		String walletId = "cf9e7d45-151d-45c4-a26b-3c57642d561e";
+		String walletId = "194d99be-1fb1-4024-bcd4-8e83ba5bc2a8";
+		UUID validWalletId = UUID.fromString(walletId);
 		//List<PaymentDto> returnedPaymentValues = paymentService.getPaymentsByWalletId(UUID.fromString(walletId));
+		Wallet wallet = walletService.getWalletById(validWalletId);
+		WalletDto walletDto = new WalletDto.WalletDtoBuilder().setBalance(wallet.getBalance()).build();
 
-		Mockito.when(paymentService.getPaymentsByWalletId(UUID.fromString(walletId))).thenReturn(getPaymentsByWalletId(walletId));
-		String req = "/api/v1/wallets/payments"+ walletId;
+		Mockito.when(walletDto).thenReturn(getWalletDtoForBalanceCheck());
+		String req = "/api/v1/wallets/"+ walletId;
 		mockMvc.perform(get(URI.create(req)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].walletId").value("cf9e7d45-151d-45c4-a26b-3c57642d561e"))
@@ -128,9 +138,18 @@ class JcodeTestApplicationTests {
 	@Test
 	public void testValidPaymentGetExample() throws Exception {
 		String walletId = "cf9e7d45-151d-45c4-a26b-3c57642d561e";
+		UUID validWalletId = UUID.fromString(walletId);
 		//List<PaymentDto> returnedPaymentValues = paymentService.getPaymentsByWalletId(UUID.fromString(walletId));
 
-		Mockito.when(paymentService.getPaymentsByWalletId(UUID.fromString(walletId))).thenReturn(getPaymentsByWalletId(walletId));
+		List<Payment> payments= paymentService.getPaymentsByWalletId(validWalletId);
+
+		List<PaymentDto> paymentsResult = new ArrayList<>(payments.size());
+        for(Payment p : payments) {
+            paymentsResult.add(new PaymentDto.PaymentDtoBuilder().setWalletId(validWalletId).setOperationType(p.getOperationType()).setAmount(p.getAmount()).build());
+            //paymentsResult.add(new PaymentDto.PaymentDtoBuilder().setOperationType(p.getOperationType()).setAmount(p.getAmount()).build());
+        }
+
+		Mockito.when(paymentsResult).thenReturn(getPaymentsByWalletId(walletId));
 		String req = "/api/v1/wallets/payments"+ walletId;
 		mockMvc.perform(get(URI.create(req)))
 			.andExpect(status().isOk())

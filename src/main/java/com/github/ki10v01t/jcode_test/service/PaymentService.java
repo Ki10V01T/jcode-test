@@ -1,6 +1,5 @@
 package com.github.ki10v01t.jcode_test.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,18 +35,12 @@ public class PaymentService {
         paymentRepository.save(paymentDto.toPayment(wallet.get()));
     }
 
-    public List<PaymentDto> getPaymentsByWalletId(UUID walletId) {
+    public List<Payment> getPaymentsByWalletId(UUID walletId) {
         List<Payment> payments = paymentRepository.findAllByWalletId(walletId);
         if(payments.isEmpty()) {
             throw new NotFoundException("The wallet for the wallet_id you specified was not found");
         }
 
-        List<PaymentDto> paymentsResult = new ArrayList<>(payments.size());
-        for(Payment p : payments) {
-            paymentsResult.add(new PaymentDto.PaymentDtoBuilder().setWalletId(walletId).setOperationType(p.getOperationType()).setAmount(p.getAmount()).build());
-            //paymentsResult.add(new PaymentDto.PaymentDtoBuilder().setOperationType(p.getOperationType()).setAmount(p.getAmount()).build());
-        }
-
-        return paymentsResult;
+        return payments;
     }
 }

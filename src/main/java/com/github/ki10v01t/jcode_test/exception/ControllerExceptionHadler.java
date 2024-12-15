@@ -22,5 +22,4 @@ public class ControllerExceptionHadler extends ResponseEntityExceptionHandler {
     public ResponseEntity<PaymentErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException iae) {
         return new ResponseEntity<>(new PaymentErrorResponseDto(iae.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
     }
-
 }
