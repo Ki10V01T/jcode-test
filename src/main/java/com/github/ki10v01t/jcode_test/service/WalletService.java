@@ -36,7 +36,7 @@ public class WalletService {
 
     public Boolean checkExistedWalletById(UUID walletId) {
         return walletRepository.existsById(walletId);
-    } 
+    }
 
     public WalletDto getWalletById(UUID walletId) throws NotFoundException{
         Optional<Wallet> wallet = walletRepository.findById(walletId);

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.github.ki10v01t.jcode_test.entity.Wallet;
 
 public class WalletDto {
     @JsonIgnore
@@ -69,6 +69,15 @@ public class WalletDto {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Wallet toWallet() {
+        Wallet wallet = new Wallet();
+        wallet.setWalletId(this.walletId);
+        wallet.setFullName(this.fullName);
+        wallet.setBalance(this.balance);
+
+        return wallet;
     }
 
 }

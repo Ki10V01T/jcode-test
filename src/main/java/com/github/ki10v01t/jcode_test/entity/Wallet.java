@@ -44,7 +44,7 @@ public class Wallet {
     @Max(value = 9223372036854775806L, message = "Значение поля amount не может быть слишком большим")
     private Long balance;
 
-    @OneToMany(mappedBy = "wallet", cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wallet", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Payment> payments;
 

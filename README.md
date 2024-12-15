@@ -1,17 +1,53 @@
 # jcode-test
 
-Приложение принимает запросы, вида: \
-POST api/v1/wallet 
+Приложение принимает запросы, вида: 
+
+Создание новой оплаты \
+POST api/v1/wallet \
+Запрос:
 ```json
 {
- "walletId" : "6f581191-f086-4af8-976a-742475f51306,
- "operationType" : "DEPOSIT,
- "amount" : 1000
+    "walletId" : "6f581191-f086-4af8-976a-742475f51306",
+    "operationType" : "DEPOSIT",
+    "amount" : 1000
 } 
 ```
 
-GET api/v1/wallets/{WALLET_UUID} 
+Получение баланса кошелька \
+GET api/v1/wallets/{WALLET_UUID} \
+Ответ:
+```json
+{
+    "balance" : 1000000
+} 
+```
 
-Из того, что не успел сделать: \
-    - Тесты
-    - Протестировать контейнеризацию docker (сами конфиги написаны)
+Получение всех оплат по WALLET_UUID \
+GET api/v1/wallets/paymetns/{WALLET_UUID} \
+Ответ:
+```json
+[
+    {
+        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
+        "operationType": "DEPOSIT,
+        "amount": 1000
+    },
+    {
+        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
+        "operationType": "DEPOSIT,
+        "amount": 500 
+    },
+    {
+        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
+        "operationType": "DEPOSIT",
+        "amount": 1000
+    },
+    {
+        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
+        "operationType": "DEPOSIT",
+        "amount": 1000
+    }
+]
+```
+
+Возникли вопросы по тестам: Mockito странно их обрабатывает

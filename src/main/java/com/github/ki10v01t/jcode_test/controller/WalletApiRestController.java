@@ -1,17 +1,12 @@
 package com.github.ki10v01t.jcode_test.controller;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.ki10v01t.jcode_test.entity.Payment;
 import com.github.ki10v01t.jcode_test.entity.Wallet;
 import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
-import com.github.ki10v01t.jcode_test.entity.Dto.PaymentErrorResponseDto;
 import com.github.ki10v01t.jcode_test.entity.Dto.WalletDto;
 import com.github.ki10v01t.jcode_test.exception.NotFoundException;
 import com.github.ki10v01t.jcode_test.service.PaymentService;
@@ -77,8 +71,8 @@ public class WalletApiRestController {
     
 
     @PostMapping("/wallet")
-    public ResponseEntity<HttpStatus> saveNewPayment(@RequestBody @Valid Payment payment, BindingResult bindingResult) {
-        paymentValidator.validate(payment, bindingResult);
+    public ResponseEntity<HttpStatus> saveNewPayment(@RequestBody @Valid PaymentDto paymentDto, BindingResult bindingResult) {
+        paymentValidator.validate(paymentDto, bindingResult);
         //Optional<Wallet> w = walletService.getWalletById(null);
         if(bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
@@ -93,17 +87,8 @@ public class WalletApiRestController {
             }
             throw new NotFoundException(errorMessage.toString());
         }
-        paymentService.createNewPayment(payment);
+
+        paymentService.createNewPayment(paymentDto);
         return ResponseEntity.ok().build();
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<PaymentErrorResponseDto> handleNotFoundException(NotFoundException pnfe) {
-        return new ResponseEntity<>(new PaymentErrorResponseDto(pnfe.getMessage(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<PaymentErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException iae) {
-        return new ResponseEntity<>(new PaymentErrorResponseDto(iae.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
     }
 }

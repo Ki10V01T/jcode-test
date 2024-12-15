@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 
 import com.github.ki10v01t.jcode_test.entity.Payment;
 import com.github.ki10v01t.jcode_test.entity.Wallet;
+import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
 
 @Service
 public class PaymentValidator implements Validator {
@@ -19,16 +20,16 @@ public class PaymentValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Wallet.class.equals(clazz);
+        return PaymentDto.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Payment payment = (Payment) target;
-        UUID walletId = payment.getWallet().getWalletId();
+        PaymentDto payment = (PaymentDto) target;
+        UUID walletId = payment.getWalletId();
         
         if(!walletService.checkExistedWalletById(walletId)) {
-            errors.rejectValue("wallet", "" , String.format("Wallet with walletID = %s not exist", walletId));
+            errors.rejectValue("walletId", "" , String.format("Wallet with walletId = %s not exist", walletId));
         }
     }
 
