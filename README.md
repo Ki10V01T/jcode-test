@@ -23,7 +23,7 @@ GET api/v1/wallets/{WALLET_UUID} \
 ```
 
 Получение всех оплат по WALLET_UUID \
-GET api/v1/wallets/paymetns/{WALLET_UUID} \
+GET api/v1/wallets/payments/{WALLET_UUID} \
 Ответ:
 ```json
 [
