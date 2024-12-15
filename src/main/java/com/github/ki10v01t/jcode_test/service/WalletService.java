@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ki10v01t.jcode_test.entity.Wallet;
+import com.github.ki10v01t.jcode_test.entity.Dto.WalletDto;
+import com.github.ki10v01t.jcode_test.exception.NotFoundException;
 import com.github.ki10v01t.jcode_test.repository.WalletRepository;
 
 @Service
@@ -32,8 +34,17 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
-    public Optional<Wallet> getWalletById(UUID walletId) {
-        return walletRepository.findById(walletId);
+    public Boolean checkExistedWalletById(UUID walletId) {
+        return walletRepository.existsById(walletId);
+    } 
+
+    public WalletDto getWalletById(UUID walletId) throws NotFoundException{
+        Optional<Wallet> wallet = walletRepository.findById(walletId);
+        if(wallet.isEmpty()) {
+            throw new NotFoundException("The wallet for the wallet_id you specified was not found");
+        }
+
+        return new WalletDto.WalletDtoBuilder().setBalance(wallet.get().getBalance()).build();
     }
 
 }

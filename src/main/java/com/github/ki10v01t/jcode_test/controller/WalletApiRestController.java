@@ -23,7 +23,8 @@ import com.github.ki10v01t.jcode_test.entity.Payment;
 import com.github.ki10v01t.jcode_test.entity.Wallet;
 import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
 import com.github.ki10v01t.jcode_test.entity.Dto.PaymentErrorResponseDto;
-import com.github.ki10v01t.jcode_test.exception.PaymentNotFoundException;
+import com.github.ki10v01t.jcode_test.entity.Dto.WalletDto;
+import com.github.ki10v01t.jcode_test.exception.NotFoundException;
 import com.github.ki10v01t.jcode_test.service.PaymentService;
 import com.github.ki10v01t.jcode_test.service.PaymentValidator;
 import com.github.ki10v01t.jcode_test.service.WalletService;
@@ -60,16 +61,14 @@ public class WalletApiRestController {
     }
 
     @GetMapping("/wallets/{wallet-id}")
-    public ResponseEntity<Wallet> getWalletBalanceByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
+    public ResponseEntity<WalletDto> getWalletBalanceByWalletId(@PathVariable("wallet-id") String walletIdTemplate) {
         
         UUID walletId = walletService.transformWalletUUID(walletIdTemplate, Wallet.uuidRegex);
 
-        Optional<Wallet> wallet = walletService.getWalletById(walletId);
-        if(wallet.isEmpty()) {
-            throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
-        }
+        WalletDto wallet = walletService.getWalletById(walletId);
+        
 
-        return ResponseEntity.ok().body(wallet.get());
+        return ResponseEntity.ok().body(wallet);
         //List<PaymentDto> payments = paymentService.getPaymentsByWalletId(walletId);
         //return ResponseEntity.ok().body(wallet.get().getPayments());
         //return ResponseEntity.ok().body(payments);
@@ -92,14 +91,14 @@ public class WalletApiRestController {
                             .append(error.getDefaultMessage())
                             .append(";");
             }
-            throw new PaymentNotFoundException(errorMessage.toString());
+            throw new NotFoundException(errorMessage.toString());
         }
         paymentService.createNewPayment(payment);
         return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler
-    public ResponseEntity<PaymentErrorResponseDto> handlePaymentNotFound(PaymentNotFoundException pnfe) {
+    public ResponseEntity<PaymentErrorResponseDto> handleNotFoundException(NotFoundException pnfe) {
         return new ResponseEntity<>(new PaymentErrorResponseDto(pnfe.getMessage(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
     }
 

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.ki10v01t.jcode_test.entity.Payment;
 import com.github.ki10v01t.jcode_test.entity.Dto.PaymentDto;
-import com.github.ki10v01t.jcode_test.exception.PaymentNotFoundException;
+import com.github.ki10v01t.jcode_test.exception.NotFoundException;
 import com.github.ki10v01t.jcode_test.repository.PaymentRepository;
 
 @Service
@@ -30,12 +30,13 @@ public class PaymentService {
     public List<PaymentDto> getPaymentsByWalletId(UUID walletId) {
         List<Payment> payments = paymentRepository.findAllByWalletId(walletId);
         if(payments.size() == 0) {
-            throw new PaymentNotFoundException("The wallet for the wallet_id you specified was not found");
+            throw new NotFoundException("The wallet for the wallet_id you specified was not found");
         }
 
         List<PaymentDto> paymentsResult = new ArrayList<>(payments.size());
         for(Payment p : payments) {
-            paymentsResult.add(new PaymentDto(p.getWallet().getWalletId(), p.getOperationType(), p.getAmount()));
+            paymentsResult.add(new PaymentDto.PaymentDtoBuilder().setOperationType(p.getOperationType())
+                                            .setAmount(p.getAmount()).build());
         }
 
         return paymentsResult;

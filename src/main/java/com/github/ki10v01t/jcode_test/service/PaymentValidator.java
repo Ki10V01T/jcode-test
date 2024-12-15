@@ -27,7 +27,7 @@ public class PaymentValidator implements Validator {
         Payment payment = (Payment) target;
         UUID walletId = payment.getWallet().getWalletId();
         
-        if(!walletService.getWalletById(walletId).isPresent()) {
+        if(!walletService.checkExistedWalletById(walletId)) {
             errors.rejectValue("wallet", "" , String.format("Wallet with walletID = %s not exist", walletId));
         }
     }

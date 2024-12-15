@@ -2,6 +2,8 @@ package com.github.ki10v01t.jcode_test.entity.Dto;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.github.ki10v01t.jcode_test.entity.OperationType;
 
 public class PaymentDto {
@@ -9,12 +11,38 @@ public class PaymentDto {
     private OperationType operationType;
     private Long amount;
 
-    public PaymentDto() {}
+    private PaymentDto(PaymentDtoBuilder paymentDtoBuilder) {
+        this.walletId = paymentDtoBuilder.walletId;
+        this.operationType = paymentDtoBuilder.operationType;
+        this.amount = paymentDtoBuilder.amount;
+    }
 
-    public PaymentDto(UUID walletId, OperationType operationType, Long amount) {
-        this.walletId = walletId;
-        this.operationType = operationType;
-        this.amount = amount;
+    @JsonIgnoreProperties
+    public static class PaymentDtoBuilder {
+        private UUID walletId;
+        private OperationType operationType;
+        private Long amount;
+
+        public PaymentDtoBuilder() {}
+
+        public PaymentDtoBuilder setAmount(Long amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public PaymentDtoBuilder setOperationType(OperationType operationType) {
+            this.operationType = operationType;
+            return this;
+        }
+
+        public PaymentDtoBuilder setWalletId(UUID walletId) {
+            this.walletId = walletId;
+            return this;
+        }
+
+        public PaymentDto build() {
+            return new PaymentDto(this);
+        }
     }
 
     public void setAmount(Long amount) {
