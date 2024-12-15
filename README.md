@@ -28,22 +28,22 @@ GET api/v1/wallets/paymetns/{WALLET_UUID} \
 ```json
 [
     {
-        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
-        "operationType": "DEPOSIT,
-        "amount": 1000
-    },
-    {
-        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
-        "operationType": "DEPOSIT,
-        "amount": 500 
-    },
-    {
-        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
+        "walletId": "cf9e7d45-151d-45c4-a26b-3c57642d561e",
         "operationType": "DEPOSIT",
         "amount": 1000
     },
     {
-        "walletId": cf9e7d45-151d-45c4-a26b-3c57642d561e,
+        "walletId": "cf9e7d45-151d-45c4-a26b-3c57642d561e",
+        "operationType": "DEPOSIT",
+        "amount": 500 
+    },
+    {
+        "walletId": "cf9e7d45-151d-45c4-a26b-3c57642d561e",
+        "operationType": "DEPOSIT",
+        "amount": 1000
+    },
+    {
+        "walletId": "cf9e7d45-151d-45c4-a26b-3c57642d561e",
         "operationType": "DEPOSIT",
         "amount": 1000
     }
