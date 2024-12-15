@@ -49,5 +49,12 @@ GET api/v1/wallets/paymetns/{WALLET_UUID} \
     }
 ]
 ```
+Ошибки обарабатываются и отсылаются в формате: \
+```json
+{
+    "message": "message",
+    "timestamp": "timestamp"
+}
+```
 
 Возникли вопросы по тестам: Mockito странно их обрабатывает
